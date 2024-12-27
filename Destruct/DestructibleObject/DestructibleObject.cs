@@ -25,7 +25,7 @@ namespace Unity.FPS.Game
         public void TakeDamage(float amount, Vector3 hitPoint, Vector3 hitDirection)
         {
             currentHealth -= amount;
-            Debug.Log($"{gameObject.name} получил {amount} урона. Текущее здоровье: {currentHealth}/{maxHealth}");
+            Debug.Log($"{gameObject.name} received {amount} damage. Current health: {currentHealth}/{maxHealth}");
             foreach (var group in fragmentGroups)
             {
                 if (currentHealth <= group.healthThreshold && currentFragmentsActivated < group.fragmentCount)
@@ -42,12 +42,11 @@ namespace Unity.FPS.Game
 
         void ActivateFragments(FragmentGroup group, Vector3 hitPoint, Vector3 hitDirection)
         {
-            Debug.Log($"Создаём {group.fragmentCount} фрагментов при здоровье <= {currentHealth}");
+            Debug.Log($"Creating {group.fragmentCount} fragments at health <= {currentHealth}");
             for (int i = 0; i < group.fragmentCount; i++)
             {
                 GameObject fragment = Instantiate(group.fragmentPrefab, transform.position, Quaternion.identity);
                 fragment.transform.parent = null;
-                fragment.transform.localScale = Vector3.one * 0.5f;
 
                 Rigidbody rb = fragment.GetComponent<Rigidbody>();
                 if (rb != null)
@@ -56,7 +55,7 @@ namespace Unity.FPS.Game
                 }
                 else
                 {
-                    Debug.LogWarning($"Фрагмент {fragment.name} не имеет компонента Rigidbody.");
+                    Debug.LogWarning($"Fragment {fragment.name} does not have a Rigidbody component.");
                 }
             }
 
@@ -68,12 +67,12 @@ namespace Unity.FPS.Game
             if (mainRenderer != null)
                 mainRenderer.enabled = false;
 
-            Debug.Log($"{gameObject.name} разрушился на фрагменты!");
+            Debug.Log($"{gameObject.name} has been destroyed into fragments!");
         }
 
         void Die()
         {
-            Debug.Log($"{gameObject.name} полностью уничтожен!");
+            Debug.Log($"{gameObject.name} has been completely destroyed!");
             Destroy(gameObject);
         }
     }
