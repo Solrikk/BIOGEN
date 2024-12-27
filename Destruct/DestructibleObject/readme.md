@@ -1,3 +1,18 @@
+![Logo](https://github.com/Solrikk/DestructibleObject/blob/main/assets/OpenCV%20-%20result/bee.jpg)
+
+<div align="center">
+  <h3>
+    <a href="https://github.com/Solrikk/DestructibleObject/blob/main/README.md">⭐English ⭐</a> |
+    <a href="https://github.com/Solrikk/DestructibleObject/blob/main/docs/readme/README_RU.md">Russian</a> |
+    <a href="https://github.com/Solrikk/DestructibleObject/blob/main/docs/readme/README_GE.md">German</a> |
+    <a href="https://github.com/Solrikk/DestructibleObject/blob/main/docs/readme//README_JP.md">Japanese</a> |
+    <a href="https://github.com/Solrikk/DestructibleObject/blob/main/docs/readme/README_KR.md">Korean</a> |
+    <a href="https://github.com/Solrikk/DestructibleObject/blob/main/docs/readme/README_CN.md">Chinese</a>
+  </h3>
+</div>
+
+-----------------
+
 # DestructibleObject
 
 A Unity script that allows GameObjects, such as cubes, to be destructible. When the object takes damage and its health drops below specified thresholds, it breaks into smaller fragments, creating realistic destruction effects with physics interactions.
