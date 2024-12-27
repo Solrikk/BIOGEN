@@ -1,4 +1,4 @@
-![Logo](https://github.com/Solrikk/C# Scripts for Games/blob/main/assets/OpenCV%20-%20result/bee.jpg)
+![Logo](https://github.com/Solrikk/C#ScriptsforGames/blob/main/assets/OpenCV%20-%20result/bee.jpg)
 
 <div align="center">
   <h3>
