@@ -48,6 +48,28 @@ namespace Unity.FPS.Game
                 GameObject fragment = Instantiate(group.fragmentPrefab, transform.position, Quaternion.identity);
                 fragment.transform.parent = null;
 
+                Renderer renderer = fragment.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material.SetFloat("_Mode", 3);
+                    renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                    renderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    renderer.material.SetInt("_ZWrite", 0);
+                    renderer.material.DisableKeyword("_ALPHATEST_ON");
+                    renderer.material.EnableKeyword("_ALPHABLEND_ON");
+                    renderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                    renderer.material.renderQueue = 3000;
+                    Color color = renderer.material.color;
+                    color.a = 0.5f;
+                    renderer.material.color = color;
+                }
+
+                Collider collider = fragment.GetComponent<Collider>();
+                if (collider != null)
+                {
+                    collider.isTrigger = true;
+                }
+
                 Rigidbody rb = fragment.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
@@ -57,6 +79,8 @@ namespace Unity.FPS.Game
                 {
                     Debug.LogWarning($"Fragment {fragment.name} does not have a Rigidbody component.");
                 }
+
+                Destroy(fragment, 5f);
             }
 
             Collider mainCollider = GetComponent<Collider>();
@@ -66,6 +90,13 @@ namespace Unity.FPS.Game
             Renderer mainRenderer = GetComponent<Renderer>();
             if (mainRenderer != null)
                 mainRenderer.enabled = false;
+
+            Rigidbody mainRigidbody = GetComponent<Rigidbody>();
+            if (mainRigidbody != null)
+            {
+                mainRigidbody.isKinematic = true;
+                mainRigidbody.detectCollisions = false;
+            }
 
             Debug.Log($"{gameObject.name} has been destroyed into fragments!");
         }
