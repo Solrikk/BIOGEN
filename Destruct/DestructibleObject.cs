@@ -23,6 +23,28 @@ namespace Unity.FPS.Game
                 foreach (var fragment in group.fragments)
                 {
                     fragment.SetActive(false);
+
+                    // Убедитесь, что фрагмент имеет Rigidbody
+                    Rigidbody rb = fragment.GetComponent<Rigidbody>();
+                    if (rb == null)
+                    {
+                        rb = fragment.AddComponent<Rigidbody>();
+                    }
+
+                    // Убедитесь, что Rigidbody не кинематический
+                    rb.isKinematic = false;
+
+                    // Убедитесь, что фрагмент имеет коллайдер и он выпуклый
+                    MeshCollider meshCollider = fragment.GetComponent<MeshCollider>();
+                    if (meshCollider != null && !meshCollider.convex)
+                    {
+                        meshCollider.convex = true;
+                    }
+                    else if (meshCollider == null)
+                    {
+                        // Если MeshCollider отсутствует, добавьте BoxCollider
+                        fragment.AddComponent<BoxCollider>();
+                    }
                 }
             }
         }
@@ -62,6 +84,7 @@ namespace Unity.FPS.Game
                 fragment.SetActive(true);
                 fragment.transform.parent = null;
                 fragment.transform.localScale = Vector3.one * 0.5f;
+
                 Rigidbody rb = fragment.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
