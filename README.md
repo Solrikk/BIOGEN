@@ -1,3 +1,18 @@
+![Logo](https://github.com/Solrikk/C# Scripts for Games/blob/main/assets/OpenCV%20-%20result/bee.jpg)
+
+<div align="center">
+  <h3>
+    <a href="https://github.com/Solrikk/C# Scripts for Games/blob/main/README.md">⭐English ⭐</a> |
+    <a href="https://github.com/Solrikk/C# Scripts for Games/blob/main/docs/readme/README_RU.md">Russian</a> |
+    <a href="https://github.com/Solrikk/C# Scripts for Games/blob/main/docs/readme/README_GE.md">German</a> |
+    <a href="https://github.com/Solrikk/C# Scripts for Games/blob/main/docs/readme//README_JP.md">Japanese</a> |
+    <a href="https://github.com/Solrikk/C# Scripts for Games/blob/main/docs/readme/README_KR.md">Korean</a> |
+    <a href="https://github.com/Solrikk/C# Scripts for Games/blob/main/docs/readme/README_CN.md">Chinese</a>
+  </h3>
+</div>
+
+-----------------
+
 # C# Scripts for Games
 
 Welcome to my repository! Here you will find a variety of C# scripts designed for game development. These scripts will help accelerate the development process and add functionality to your game projects.
