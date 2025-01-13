@@ -12,6 +12,11 @@ public class SystemTerminalOutput : MonoBehaviour
     private Queue<string> lines = new Queue<string>();
     private bool isTyping = false;
     public int maxLines = 13;
+    public Color primaryColor = new Color(0.0f, 1.0f, 0.0f, 1.0f); // Neon green
+    public Color warningColor = new Color(1.0f, 0.5f, 0.0f, 1.0f); // Orange
+    public Color alertColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);   // Red
+    private float glitchTimer = 0f;
+    private float glitchInterval = 0.1f;
 
     private string[] systemActions = new string[]
     {
@@ -75,21 +80,69 @@ public class SystemTerminalOutput : MonoBehaviour
     {
         string timestamp = DateTime.Now.ToString("HH:mm:ss");
         string randomAction = systemActions[random.Next(systemActions.Length)];
-        AddLine($"[{timestamp}] {randomAction}");
+        string colorTag = randomAction.StartsWith("ALERT") ? $"<color=#{ColorUtility.ToHtmlStringRGB(alertColor)}>" :
+                         randomAction.StartsWith("WARNING") ? $"<color=#{ColorUtility.ToHtmlStringRGB(warningColor)}>" :
+                         $"<color=#{ColorUtility.ToHtmlStringRGB(primaryColor)}>";
+
+        AddLine($"{colorTag}[{timestamp}] {randomAction}</color>");
 
         if (random.Next(100) < 20) // 20% chance for system metrics
         {
-            AddLine($"[{timestamp}] METRICS: Power usage: {random.Next(75, 98)}%");
-            AddLine($"[{timestamp}] METRICS: Neural load: {random.Next(40, 95)}%");
+            string metrics = $"[{timestamp}] METRICS: Power usage: {random.Next(75, 98)}% | Neural load: {random.Next(40, 95)}%";
+            AddLine($"<color=#{ColorUtility.ToHtmlStringRGB(primaryColor)}>{metrics}</color>");
         }
+    }
+
+    void Update()
+    {
+        glitchTimer += Time.deltaTime;
+        if (glitchTimer >= glitchInterval)
+        {
+            glitchTimer = 0f;
+            if (random.Next(100) < 5) // 5% chance for glitch effect
+            {
+                StartCoroutine(GlitchEffect());
+            }
+        }
+    }
+
+    IEnumerator GlitchEffect()
+    {
+        string originalText = outputText.text;
+        string glitchChars = "@#$%&*!?";
+
+        for (int i = 0; i < 3; i++)
+        {
+            string glitchedText = originalText;
+            int glitchCount = random.Next(1, 4);
+            for (int j = 0; j < glitchCount; j++)
+            {
+                if (glitchedText.Length > 0)
+                {
+                    int pos = random.Next(glitchedText.Length);
+                    char glitchChar = glitchChars[random.Next(glitchChars.Length)];
+                    if (pos < glitchedText.Length - 1)
+                    {
+                        glitchedText = glitchedText.Substring(0, pos) + glitchChar + glitchedText.Substring(pos + 1);
+                    }
+                }
+            }
+            outputText.text = glitchedText;
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        outputText.text = originalText;
     }
 
     IEnumerator TerminalRoutine()
     {
-        AddLine("[SYSTEM BOOT] BIOGEN Terminal v2.47.8a");
-        AddLine("[INIT] Operator 1238 - Terminal Access Granted");
-        AddLine("[STATUS] Connection Established");
-        AddLine("----------------------------------------");
+        string bootColor = $"<color=#{ColorUtility.ToHtmlStringRGB(primaryColor)}>";
+        AddLine($"{bootColor}[SYSTEM BOOT] ██████████ BIOGEN Terminal v2.47.8a ██████████</color>");
+        yield return new WaitForSeconds(0.5f);
+        AddLine($"{bootColor}[INIT] >>> Operator 1238 - Terminal Access Granted <<<</color>");
+        yield return new WaitForSeconds(0.3f);
+        AddLine($"{bootColor}[STATUS] ### Connection Established ###</color>");
+        AddLine($"{bootColor}██████████████████████████████████████████████████</color>");
 
         while (true)
         {
