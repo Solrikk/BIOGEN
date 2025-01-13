@@ -1,0 +1,345 @@
+
+using UnityEngine;
+using TMPro;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+
+public class TerminalController : MonoBehaviour
+{
+    public TMP_Text outputText;
+    public TMP_InputField inputField;
+
+    [SerializeField]
+    private int maxLines = 13;
+
+    private const string prompt = "PS> ";
+    private bool isProcessing = false;
+    private List<string> commandHistory = new List<string>();
+    private int historyIndex = -1;
+    private DateTime startTime;
+    private List<string> welcomeMessages;
+    private int currentMessageIndex = 0;
+    private string currentMessage = "";
+    private float typingSpeed = 0.03f;
+    private float nextCharTime = 0f;
+    private bool isTypingMessage = false;
+    private bool isAuthenticated = false;
+    private string correctLogin = "admin";
+    private string correctPassword = "biogen";
+    private bool isEnteringLogin = false;
+    private bool isEnteringPassword = false;
+    private Color neonBlue = new Color(0.2f, 0.8f, 1.0f, 1.0f);
+    private Color neonPink = new Color(1.0f, 0.2f, 0.8f, 1.0f);
+    private Color neonCyan = new Color(0.0f, 1.0f, 0.8f, 1.0f);
+
+    void Start()
+    {
+        startTime = DateTime.Now;
+        InitializeTerminal();
+        inputField.interactable = true;
+        RequestLogin();
+    }
+
+    private void RequestLogin()
+    {
+        AppendOutput("Enter login:");
+        isEnteringLogin = true;
+        isEnteringPassword = false;
+    }
+
+    private void InitializeTerminal()
+    {
+        if (inputField != null)
+        {
+            inputField.text = prompt;
+            inputField.interactable = false;
+            inputField.onSelect.AddListener(OnInputFieldSelected);
+            inputField.onSubmit.AddListener(ProcessCommand);
+            inputField.onValueChanged.AddListener(OnInputFieldValueChanged);
+            inputField.ActivateInputField();
+            outputText.enableWordWrapping = true;
+            outputText.overflowMode = TextOverflowModes.Truncate;
+            welcomeMessages = new List<string>
+            {
+                @"▄▄▄▄· ▪  ▄▄▄   ▄▄ • ▄▄▄ . ▐ ▄ ",
+                @"▐█ ▀█▪██ ▀▄ █·▐█ ▀ ▪▀▄.▀·•█▌▐█",
+                @"▐█▀▀█▄▐█·▐▀▀▄ ▄█ ▀█▄▐▀▀▪▄▐█▐▐▌",
+                @"██▄▪▐█▐█▌▐█•█▌▐█▄▪▐█▐█▄▄▌██▐█▌",
+                @"·▀▀▀▀ ▀▀▀.▀  ▀·▀▀▀▀  ▀▀▀ ▀▀ █▪",
+                "<color=#00FFEA>SYSTEM: NEO-TOKYO MAINFRAME</color>",
+                "<color=#FF00AA>[警告] SECURITY CLEARANCE REQUIRED [警告]</color>",
+                "<color=#00FFEA>--------------------------------</color>",
+                "OPERATOR STATUS: CYBER-ENFORCEMENT DIVISION",
+                "THREAT LEVEL: CRITICAL - RED CRYSTAL INSURGENCY",
+                "<color=#FF00AA>NEURAL LINK ESTABLISHED...</color>",
+                "BIOGEN CORPORATE AUTHORITY ACTIVE",
+                "<color=#00FFEA>ENTER 'help' FOR COMMAND LIST</color>",
+                "<color=#FF00AA>サイバーセキュリティ システム起動中...</color>"
+            };
+            isTypingMessage = true;
+        }
+        else
+        {
+            Debug.LogError("InputField not assigned in inspector.");
+        }
+
+        if (outputText == null)
+        {
+            Debug.LogError("OutputText not assigned in inspector.");
+        }
+    }
+
+    void OnInputFieldSelected(string text)
+    {
+        inputField.caretPosition = inputField.text.Length;
+    }
+
+    void OnInputFieldValueChanged(string text)
+    {
+        if (!text.StartsWith(prompt))
+        {
+            inputField.text = prompt;
+            inputField.caretPosition = inputField.text.Length;
+        }
+    }
+
+    void ProcessCommand(string userInput)
+    {
+        if (isProcessing) return;
+
+        try
+        {
+            isProcessing = true;
+            string input = userInput.Substring(prompt.Length).Trim();
+
+            string command = input.ToLower();
+            string[] args = command.Split(' ');
+
+            if (string.IsNullOrEmpty(command)) return;
+
+            if (command == "help")
+            {
+                ShowHelp();
+                return;
+            }
+
+            if (isEnteringLogin)
+            {
+                if (command == correctLogin.ToLower())
+                {
+                    AppendOutput("Enter password:");
+                    isEnteringLogin = false;
+                    isEnteringPassword = true;
+                }
+                else
+                {
+                    AppendOutput("Invalid login. Try again:");
+                }
+                return;
+            }
+
+            if (isEnteringPassword)
+            {
+                if (input == correctPassword)
+                {
+                    isAuthenticated = true;
+                    isEnteringPassword = false;
+                    AppendOutput("Access granted. Welcome to the system.");
+                }
+                else
+                {
+                    AppendOutput("Invalid password. Access denied.");
+                    RequestLogin();
+                }
+                return;
+            }
+
+            if (!isAuthenticated)
+            {
+                AppendOutput("Please log in to the system.");
+                return;
+            }
+
+            AppendOutput(prompt + command);
+            commandHistory.Add(command);
+            historyIndex = commandHistory.Count;
+
+            switch (args[0])
+            {
+                case "clear":
+                    ClearOutput();
+                    break;
+                case "hello":
+                    AppendOutput("Hello! This is an enhanced terminal in Unity.");
+                    break;
+                case "time":
+                    ShowTime();
+                    break;
+                case "uptime":
+                    ShowUptime();
+                    break;
+                case "echo":
+                    Echo(args);
+                    break;
+                case "history":
+                    ShowHistory();
+                    break;
+                default:
+                    AppendOutput($"Error: command '{args[0]}' not found. Enter 'help' for list of commands.");
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendOutput($"Command execution error: {ex.Message}");
+        }
+        finally
+        {
+            inputField.text = prompt;
+            inputField.caretPosition = inputField.text.Length;
+            inputField.ActivateInputField();
+            isProcessing = false;
+        }
+    }
+
+    private void ShowHelp()
+    {
+        AppendOutput("<color=#00FFEA>╔══════════════════════════════════╗</color>");
+        AppendOutput("<color=#00FFEA>║       AVAILABLE COMMANDS         ║</color>");
+        AppendOutput("<color=#00FFEA>╠══════════════════════════════════╣</color>");
+        AppendOutput("<color=#FF00AA>►</color> help    - システムコマンド表示");
+        AppendOutput("<color=#FF00AA>►</color> clear   - 画面クリア");
+        AppendOutput("<color=#FF00AA>►</color> hello   - グリーティング");
+        AppendOutput("<color=#FF00AA>►</color> time    - 現在時刻表示");
+        AppendOutput("<color=#FF00AA>►</color> uptime  - 稼働時間表示");
+        AppendOutput("<color=#FF00AA>►</color> echo    - エコー出力");
+        AppendOutput("<color=#FF00AA>►</color> history - コマンド履歴");
+        AppendOutput("<color=#00FFEA>╠══════════════════════════════════╣</color>");
+        AppendOutput("<color=#00FFEA>║      ACCESS CREDENTIALS          ║</color>");
+        AppendOutput("<color=#00FFEA>╠══════════════════════════════════╣</color>");
+        AppendOutput("  Login: <color=#FF00AA>admin</color>");
+        AppendOutput("  Password: <color=#FF00AA>biogen</color>");
+        AppendOutput("<color=#00FFEA>╚══════════════════════════════════╝</color>");
+    }
+
+    private void ShowTime()
+    {
+        AppendOutput($"Current time: {DateTime.Now:HH:mm:ss}");
+    }
+
+    private void ShowUptime()
+    {
+        TimeSpan uptime = DateTime.Now - startTime;
+        AppendOutput($"Uptime: {uptime.Days}d {uptime.Hours}h {uptime.Minutes}m {uptime.Seconds}s");
+    }
+
+    private void Echo(string[] args)
+    {
+        if (args.Length > 1)
+        {
+            AppendOutput(string.Join(" ", args, 1, args.Length - 1));
+        }
+        else
+        {
+            AppendOutput("Usage: echo <text>");
+        }
+    }
+
+    private void ShowHistory()
+    {
+        if (commandHistory.Count == 0)
+        {
+            AppendOutput("Command history is empty");
+            return;
+        }
+
+        AppendOutput("Command history:");
+        for (int i = 0; i < commandHistory.Count; i++)
+        {
+            AppendOutput($"{i + 1}. {commandHistory[i]}");
+        }
+    }
+
+    void AppendOutput(string message)
+    {
+        List<string> currentLines = outputText.text.Split('\n').ToList();
+        currentLines.Add(message);
+
+        while (currentLines.Count > maxLines)
+        {
+            currentLines.RemoveAt(0);
+        }
+
+        outputText.text = string.Join("\n", currentLines);
+    }
+
+    void ClearOutput()
+    {
+        outputText.text = "";
+    }
+
+    void Update()
+    {
+        if (inputField.isFocused)
+        {
+            HandleKeyboardInput();
+        }
+
+        if (isTypingMessage && Time.time >= nextCharTime)
+        {
+            if (currentMessageIndex < welcomeMessages.Count)
+            {
+                if (currentMessage.Length < welcomeMessages[currentMessageIndex].Length)
+                {
+                    currentMessage += welcomeMessages[currentMessageIndex][currentMessage.Length];
+                    outputText.text = string.Join("\n", welcomeMessages.Take(currentMessageIndex))
+                        + (currentMessageIndex > 0 ? "\n" : "")
+                        + currentMessage;
+                    nextCharTime = Time.time + typingSpeed;
+                }
+                else
+                {
+                    currentMessage = "";
+                    currentMessageIndex++;
+                }
+            }
+            else
+            {
+                isTypingMessage = false;
+                inputField.interactable = true;
+            }
+        }
+    }
+
+    private void HandleKeyboardInput()
+    {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            if (commandHistory.Count > 0 && historyIndex > 0)
+            {
+                historyIndex--;
+                SetInputFieldText(commandHistory[historyIndex]);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (commandHistory.Count > 0 && historyIndex < commandHistory.Count - 1)
+            {
+                historyIndex++;
+                SetInputFieldText(commandHistory[historyIndex]);
+            }
+            else
+            {
+                historyIndex = commandHistory.Count;
+                SetInputFieldText("");
+            }
+        }
+    }
+
+    void SetInputFieldText(string command)
+    {
+        inputField.text = prompt + command;
+        inputField.caretPosition = inputField.text.Length;
+    }
+}
