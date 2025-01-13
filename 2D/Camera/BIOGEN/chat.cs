@@ -11,6 +11,11 @@ public class TerminalOutput : MonoBehaviour
     private Queue<string> lines = new Queue<string>();
     private bool isTyping = false;
     public int maxLines = 13;
+    public Color primaryColor = new Color(0.0f, 1.0f, 0.0f, 1.0f); // Neon green
+    public Color operatorColor = new Color(0.0f, 0.8f, 1.0f, 1.0f); // Cyan
+    public Color overseerColor = new Color(1.0f, 0.0f, 0.0f, 1.0f); // Red
+    private float glitchTimer = 0f;
+    private float glitchInterval = 0.15f;
 
     private string[] operatorNames = new string[]
     {
@@ -76,6 +81,45 @@ public class TerminalOutput : MonoBehaviour
         StartCoroutine(SystemActivitySimulator());
     }
 
+    void Update()
+    {
+        glitchTimer += Time.deltaTime;
+        if (glitchTimer >= glitchInterval)
+        {
+            glitchTimer = 0f;
+            if (UnityEngine.Random.value < 0.05f) // 5% chance for glitch
+            {
+                StartCoroutine(GlitchEffect());
+            }
+        }
+    }
+
+    IEnumerator GlitchEffect()
+    {
+        string originalText = outputText.text;
+        string glitchChars = "¥€@#$%&*!?";
+
+        for (int i = 0; i < 3; i++)
+        {
+            string glitchedText = originalText;
+            int glitchCount = random.Next(1, 4);
+            for (int j = 0; j < glitchCount && glitchedText.Length > 0; j++)
+            {
+                int pos = random.Next(0, glitchedText.Length);
+                char glitchChar = glitchChars[random.Next(glitchChars.Length)];
+                if (pos < glitchedText.Length)
+                {
+                    glitchedText = glitchedText.Substring(0, pos) + glitchChar +
+                        (pos < glitchedText.Length - 1 ? glitchedText.Substring(pos + 1) : "");
+                }
+            }
+            outputText.text = glitchedText;
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        outputText.text = originalText;
+    }
+
     IEnumerator SystemActivitySimulator()
     {
         while (true)
@@ -89,16 +133,14 @@ public class TerminalOutput : MonoBehaviour
     {
         string timestamp = DateTime.Now.ToString("HH:mm:ss");
         string operator1 = operatorNames[random.Next(operatorNames.Length)];
-
-        // 30% chance for casual conversation
         bool isCasual = random.Next(100) < 30;
         string message = isCasual ?
             casualMessages[random.Next(casualMessages.Length)] :
             chatMessages[random.Next(chatMessages.Length)];
 
-        AddLine($"[{timestamp}] <{operator1}> {message}");
+        string operatorColorTag = $"<color=#{ColorUtility.ToHtmlStringRGB(operatorColor)}>";
+        AddLine($"{operatorColorTag}[{timestamp}] <{operator1}> {message}</color>");
 
-        // 40% chance for operator response
         if (random.Next(100) < 40)
         {
             string operator2 = operatorNames[random.Next(operatorNames.Length)];
@@ -109,20 +151,20 @@ public class TerminalOutput : MonoBehaviour
                 timestamp = DateTime.Now.ToString("HH:mm:ss");
                 if (isCasual)
                 {
-                    AddLine($"[{timestamp}] <{operator2}> Yeah, I know what you mean.");
+                    AddLine($"{operatorColorTag}[{timestamp}] <{operator2}> Yeah, I know what you mean.</color>");
 
-                    // 50% chance for overseer to intervene on casual chat
                     if (random.Next(100) < 50)
                     {
                         StartCoroutine(DelayedResponse(1.0f, () => {
                             timestamp = DateTime.Now.ToString("HH:mm:ss");
-                            AddLine($"[{timestamp}] <{OVERSEER}> {overseerWarnings[random.Next(overseerWarnings.Length)]}");
+                            string overseerColorTag = $"<color=#{ColorUtility.ToHtmlStringRGB(overseerColor)}>";
+                            AddLine($"{overseerColorTag}[{timestamp}] <{OVERSEER}> {overseerWarnings[random.Next(overseerWarnings.Length)]}</color>");
                         }));
                     }
                 }
                 else
                 {
-                    AddLine($"[{timestamp}] <{operator2}> Acknowledged. Monitoring situation.");
+                    AddLine($"{operatorColorTag}[{timestamp}] <{operator2}> Acknowledged. Monitoring situation.</color>");
                 }
             }));
         }
@@ -136,10 +178,19 @@ public class TerminalOutput : MonoBehaviour
 
     IEnumerator TerminalRoutine()
     {
-        AddLine("[SYSTEM BOOT] BIOGEN Terminal v2.47.8a");
-        AddLine("[INIT] Operator 1238 - Terminal Access Granted");
-        AddLine("[STATUS] Connection Established");
-        AddLine("----------------------------------------");
+        string bootColor = $"<color=#{ColorUtility.ToHtmlStringRGB(primaryColor)}>";
+        AddLine($"{bootColor}██╗███╗   ██╗██╗████████╗██╗ █████╗ ██╗     ██╗███████╗███████╗</color>");
+        yield return new WaitForSeconds(0.2f);
+        AddLine($"{bootColor}██║████╗  ██║██║╚══██╔══╝██║██╔══██╗██║     ██║╚══███╔╝██╔════╝</color>");
+        yield return new WaitForSeconds(0.2f);
+        AddLine($"{bootColor}[SYSTEM BOOT] ▀▄▀▄▀▄ CHAT INTERFACE v1.84.2b ▄▀▄▀▄▀</color>");
+        yield return new WaitForSeconds(0.5f);
+        AddLine($"{bootColor}[INIT] >>> Quantum Protocol Engaged <<<</color>");
+        yield return new WaitForSeconds(0.3f);
+        AddLine($"{bootColor}[STATUS] >>> Neural Link Established <<<</color>");
+        yield return new WaitForSeconds(0.2f);
+        AddLine($"{bootColor}[SECURE] >>> Encryption Matrix Active <<<</color>");
+        AddLine($"{bootColor}▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄</color>");
 
         while (true)
         {
