@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ public class TerminalController : MonoBehaviour
 
     private void RequestLogin()
     {
-        AppendOutput("Введите логин:");
+        AppendOutput("Enter login:");
         isEnteringLogin = true;
         isEnteringPassword = false;
     }
@@ -58,27 +59,27 @@ public class TerminalController : MonoBehaviour
             outputText.overflowMode = TextOverflowModes.Overflow;
             welcomeMessages = new List<string>
             {
-                "=== КОРПОРАЦИЯ BIOGEN ===",
-                "ВНИМАНИЕ: ВЫСШИЙ УРОВЕНЬ ДОСТУПА",
-                "Оператор, вы назначены на должность инспектора гражданской деятельности.",
-                "В условиях террористической угрозы от 'Красного Кристалла'",
-                "и растущей социальной нестабильности, ваша роль критически важна.",
-                "BIOGEN берёт под контроль ключевые объекты инфраструктуры.",
-                "Помните: мы - последний оплот порядка в умирающем государстве.",
-                "Ваш пожизненный контракт активирован. Добро пожаловать в систему.",
-                "Введите 'help' для получения списка доступных команд.",
+                "=== CORPORATION BIOGEN ===",
+                "ATTENTION: HIGHEST ACCESS LEVEL",
+                "Operator, you have been appointed to the position of civil activity inspector.",
+                "Under conditions of terrorist threat from 'Red Crystal'",
+                "and growing social instability, your role is critically important.",
+                "BIOGEN takes control of key infrastructure objects.",
+                "Remember: we are the last bastion of order in a dying state.",
+                "Your lifetime contract is activated. Welcome to the system.",
+                "Enter 'help' to get a list of available commands.",
                 "======================================"
             };
             isTypingMessage = true;
         }
         else
         {
-            Debug.LogError("InputField не назначен в инспекторе.");
+            Debug.LogError("InputField not assigned in inspector.");
         }
 
         if (outputText == null)
         {
-            Debug.LogError("OutputText не назначен в инспекторе.");
+            Debug.LogError("OutputText not assigned in inspector.");
         }
     }
 
@@ -120,13 +121,13 @@ public class TerminalController : MonoBehaviour
             {
                 if (command == correctLogin.ToLower())
                 {
-                    AppendOutput("Введите пароль:");
+                    AppendOutput("Enter password:");
                     isEnteringLogin = false;
                     isEnteringPassword = true;
                 }
                 else
                 {
-                    AppendOutput("Неверный логин. Попробуйте снова:");
+                    AppendOutput("Invalid login. Try again:");
                 }
                 return;
             }
@@ -137,11 +138,11 @@ public class TerminalController : MonoBehaviour
                 {
                     isAuthenticated = true;
                     isEnteringPassword = false;
-                    AppendOutput("Доступ разрешен. Добро пожаловать в систему.");
+                    AppendOutput("Access granted. Welcome to the system.");
                 }
                 else
                 {
-                    AppendOutput("Неверный пароль. Доступ запрещен.");
+                    AppendOutput("Invalid password. Access denied.");
                     RequestLogin();
                 }
                 return;
@@ -149,7 +150,7 @@ public class TerminalController : MonoBehaviour
 
             if (!isAuthenticated)
             {
-                AppendOutput("Пожалуйста, войдите в систему.");
+                AppendOutput("Please log in to the system.");
                 return;
             }
 
@@ -163,7 +164,7 @@ public class TerminalController : MonoBehaviour
                     ClearOutput();
                     break;
                 case "hello":
-                    AppendOutput("Привет! Это улучшенный терминал в Unity.");
+                    AppendOutput("Hello! This is an enhanced terminal in Unity.");
                     break;
                 case "time":
                     ShowTime();
@@ -178,13 +179,13 @@ public class TerminalController : MonoBehaviour
                     ShowHistory();
                     break;
                 default:
-                    AppendOutput($"Ошибка: команда '{args[0]}' не найдена. Введите 'help' для списка команд.");
+                    AppendOutput($"Error: command '{args[0]}' not found. Enter 'help' for list of commands.");
                     break;
             }
         }
         catch (Exception ex)
         {
-            AppendOutput($"Ошибка выполнения команды: {ex.Message}");
+            AppendOutput($"Command execution error: {ex.Message}");
         }
         finally
         {
@@ -197,28 +198,28 @@ public class TerminalController : MonoBehaviour
 
     private void ShowHelp()
     {
-        AppendOutput("Доступные команды:");
-        AppendOutput("  help    - показать список команд");
-        AppendOutput("  clear   - очистить экран");
-        AppendOutput("  hello   - приветствие");
-        AppendOutput("  time    - показать текущее время");
-        AppendOutput("  uptime  - показать время работы терминала");
-        AppendOutput("  echo    - вывести текст");
-        AppendOutput("  history - показать историю команд");
-        AppendOutput("Данные для входа:");
-        AppendOutput("  Логин: <color=yellow>admin</color>");
-        AppendOutput("  Пароль: <color=yellow>biogen</color>");
+        AppendOutput("Available commands:");
+        AppendOutput("  help    - show list of commands");
+        AppendOutput("  clear   - clear screen");
+        AppendOutput("  hello   - greeting");
+        AppendOutput("  time    - show current time");
+        AppendOutput("  uptime  - show terminal uptime");
+        AppendOutput("  echo    - output text");
+        AppendOutput("  history - show command history");
+        AppendOutput("Login credentials:");
+        AppendOutput("  Login: <color=yellow>admin</color>");
+        AppendOutput("  Password: <color=yellow>biogen</color>");
     }
 
     private void ShowTime()
     {
-        AppendOutput($"Текущее время: {DateTime.Now:HH:mm:ss}");
+        AppendOutput($"Current time: {DateTime.Now:HH:mm:ss}");
     }
 
     private void ShowUptime()
     {
         TimeSpan uptime = DateTime.Now - startTime;
-        AppendOutput($"Время работы: {uptime.Days}d {uptime.Hours}h {uptime.Minutes}m {uptime.Seconds}s");
+        AppendOutput($"Uptime: {uptime.Days}d {uptime.Hours}h {uptime.Minutes}m {uptime.Seconds}s");
     }
 
     private void Echo(string[] args)
@@ -229,7 +230,7 @@ public class TerminalController : MonoBehaviour
         }
         else
         {
-            AppendOutput("Использование: echo <текст>");
+            AppendOutput("Usage: echo <text>");
         }
     }
 
@@ -237,11 +238,11 @@ public class TerminalController : MonoBehaviour
     {
         if (commandHistory.Count == 0)
         {
-            AppendOutput("История команд пуста");
+            AppendOutput("Command history is empty");
             return;
         }
 
-        AppendOutput("История команд:");
+        AppendOutput("Command history:");
         for (int i = 0; i < commandHistory.Count; i++)
         {
             AppendOutput($"{i + 1}. {commandHistory[i]}");
