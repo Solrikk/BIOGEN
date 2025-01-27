@@ -12,7 +12,7 @@ Experience a cyberpunk-themed terminal interface simulation set in the dystopian
 In 2039, Neo-Tokyo is dominated by powerful megacorporations, with BIOGEN leading the race for supremacy. As corporate wars escalate, you're tasked with monitoring civilian activities, identifying dissent, and maintaining BIOGEN's iron grip on society. A mysterious resistance group known as **Red Crystal** threatens the established order, while rival corporations **RusMilTech** and **Shogun Advanced Systems** vie for control.
 
 Amidst the towering skyscrapers and endless neon lights, the city's underbelly teems with hackers, mercenaries, and everyday citizens struggling to survive under the oppressive corporate regimes. As tensions rise, your decisions will influence the balance of power, uncover hidden conspiracies, and determine the fate of Neo-Tokyo.
-ф
+
 ## 🔑 Features
 
 - **Cyberpunk-themed terminal interface** with detailed ASCII art
