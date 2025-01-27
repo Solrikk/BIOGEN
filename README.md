@@ -1,5 +1,10 @@
 # BIOGEN - Terminal Simulation
 
+[![Profile Views](https://komarev.com/ghpvc/?username=solrikk&color=blueviolet)](https://github.com/solrikk)
+[![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FSolrikk%2FBIOGEN&label=Views&countColor=%232ccce4)](https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FSolrikk%2FBIOGEN)
+[![YouTube](https://img.shields.io/badge/YouTube-Solrikk-red)](https://www.youtube.com/@Solrikk-qr2oi)
+[![Twitter](https://img.shields.io/badge/Twitter-Solrikk-blue)](https://x.com/Solrikk)
+
 Experience a cyberpunk-themed terminal interface simulation set in the dystopian Neo-Tokyo, where megacorporations wage shadow wars and AI oversees human operators. Take on the role of a surveillance operator working for BIOGEN Corporation, monitoring suspicious activities and maintaining social order in the neon-lit metropolis.
 
 ## 🌆 Story
@@ -7,7 +12,7 @@ Experience a cyberpunk-themed terminal interface simulation set in the dystopian
 In 2039, Neo-Tokyo is dominated by powerful megacorporations, with BIOGEN leading the race for supremacy. As corporate wars escalate, you're tasked with monitoring civilian activities, identifying dissent, and maintaining BIOGEN's iron grip on society. A mysterious resistance group known as **Red Crystal** threatens the established order, while rival corporations **RusMilTech** and **Shogun Advanced Systems** vie for control.
 
 Amidst the towering skyscrapers and endless neon lights, the city's underbelly teems with hackers, mercenaries, and everyday citizens struggling to survive under the oppressive corporate regimes. As tensions rise, your decisions will influence the balance of power, uncover hidden conspiracies, and determine the fate of Neo-Tokyo.
-
+ф
 ## 🔑 Features
 
 - **Cyberpunk-themed terminal interface** with detailed ASCII art
