@@ -1,4 +1,4 @@
-# BIOGEN Terminal Simulation
+# BIOGEN - Terminal Simulation
 
 Experience a cyberpunk-themed terminal interface simulation set in the dystopian Neo-Tokyo, where megacorporations wage shadow wars and AI oversees human operators. Take on the role of a surveillance operator working for BIOGEN Corporation, monitoring suspicious activities and maintaining social order in the neon-lit metropolis.
 
